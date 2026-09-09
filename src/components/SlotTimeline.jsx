@@ -23,7 +23,7 @@ export function SlotTimeline({ slots = [] }) {
               </div>
               <div style={{ display: 'flex', gap: 12, marginTop: 8, padding: 10, background: 'var(--surface-card)', border: '1px solid var(--border-default)', borderRadius: 12 }}>
                 <div style={{ width: 96, flexShrink: 0 }}>
-                  <SmartImage query={s.wikiTitle || s.imageQuery || s.placeName} size={200} alt={s.placeName} radius={8} aspectRatio="4/3" />
+                  <SmartImage query={[s.wikiTitle, s.imageQuery, s.placeName]} size={200} alt={s.placeName} radius={8} aspectRatio="4/3" />
                 </div>
                 <div style={{ minWidth: 0, flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 600, color: 'var(--text-primary)' }}>

@@ -16,7 +16,10 @@ export function DetailModal({ place, tripRequest, onClose, onCreateItinerary }) 
     setWxLoading(true); setWxError(false)
     const start = tripRequest.startDate
     const end = isoPlusDays(start, tripRequest.days - 1)
-    apiWeather({ name: place.name, lat, lon, start, end })
+    // Khi không có toạ độ từ Wikipedia, geocode theo tỉnh/thành (đơn vị cấp thành phố
+    // mà Open-Meteo tra được) thay vì tên địa danh cụ thể (vd "Bãi biển Mỹ Khê").
+    const geoName = place.province || place.name
+    apiWeather({ name: geoName, lat, lon, start, end })
       .then((w) => setWeather(w))
       .catch(() => setWxError(true))
       .finally(() => setWxLoading(false))
@@ -50,7 +53,7 @@ export function DetailModal({ place, tripRequest, onClose, onCreateItinerary }) 
     <Modal open={open} onClose={onClose} imageTop footer={footer} width={640}>
       <div style={{ padding: 16 }}>
         <div style={{ margin: '-16px -16px 0' }}>
-          <SmartImage query={place.wikiTitle || place.name} size={800} alt={place.name} radius={0} aspectRatio="16/9" />
+          <SmartImage query={[place.wikiTitle, place.imageQuery, place.name, place.province]} size={800} alt={place.name} radius={0} aspectRatio="16/9" />
         </div>
         <h2 style={{ margin: '16px 0 4px', fontSize: 24, fontWeight: 700, color: 'var(--text-primary)' }}>{place.name}</h2>
         {place.province && <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--text-secondary)', fontSize: 14 }}><Icon name="map-pin" size={16} />{place.province}</div>}

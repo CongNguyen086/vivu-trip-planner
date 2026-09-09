@@ -2,7 +2,7 @@ import { PlaceCard } from '../design-system/index.js'
 import { useResolvedImage } from './useResolvedImage.js'
 
 export function DestinationCard({ destination, onClick }) {
-  const q = destination.wikiTitle || destination.imageQuery || destination.name
+  const q = [destination.wikiTitle, destination.imageQuery, destination.name, destination.province]
   const { url } = useResolvedImage(q, 400)
   return (
     <PlaceCard
