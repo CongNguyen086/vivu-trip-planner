@@ -1,0 +1,26 @@
+:root{
+/* Brand */
+--color-primary:#F75940;--color-primary-hover:#E74A2F;--color-primary-active:#D93D1F;--color-primary-soft:#FDEDEA;--color-primary-soft-border:#FAC9C0;
+--color-secondary:#3F52E3;--color-secondary-hover:#3546C4;--color-secondary-soft:#ECEEFC;
+--color-accent-rose:#E23E57;
+/* Semantic */
+--color-success:#17B978;--color-success-bg:#E8F9F5;
+--color-info:#17A2B8;--color-info-bg:#E6F6F9;
+--color-warning:#EC9B3B;--color-warning-bg:#FFF3E0;
+--color-error:#FF253A;--color-error-bg:#FFE8EC;
+/* Neutrals */
+--color-white:#FFFFFF;--color-black:#000000;
+--gray-50:#F3F4F5;--gray-100:#E9ECEF;--gray-150:#EEEEEE;--gray-200:#DEE2E6;--gray-500:#6C757D;--gray-700:#495057;--gray-900:#212529;
+/* Text roles */
+--text-primary:#212529;--text-secondary:#6C757D;--text-tertiary:#495057;--text-inverse:#FFFFFF;--text-on-primary:#FFFFFF;
+/* Surfaces */
+--surface-page:#FFFFFF;--surface-card:#FFFFFF;--surface-subtle:#F3F4F5;--surface-muted:#E9ECEF;--surface-disabled:#E9ECEF;
+/* Borders */
+--border-default:#DEE2E6;--border-divider:#EEEEEE;--border-focus:#3F52E3;
+/* Overlays & image protection */
+--overlay-scrim:rgba(33,37,41,0.55);
+--overlay-image-gradient:linear-gradient(180deg,rgba(33,37,41,0) 45%,rgba(33,37,41,0.72) 100%);
+--overlay-image-gradient-strong:linear-gradient(180deg,rgba(33,37,41,0.1) 0%,rgba(33,37,41,0) 30%,rgba(33,37,41,0.82) 100%);
+/* Focus rings */
+--ring-focus:0 0 0 3px rgba(63,82,227,0.1);--ring-error:0 0 0 3px rgba(255,37,58,0.1);--ring-primary:0 0 0 3px rgba(247,89,64,0.15);
+}

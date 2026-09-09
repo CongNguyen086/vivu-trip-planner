@@ -1,0 +1,5 @@
+:root{
+--shadow-raised:rgba(0,0,0,0.1) 0px 2px 4px 0px;
+--shadow-lifted:rgba(0,0,0,0.176) 0px 8px 16px 0px;
+--shadow-floating:rgba(0,0,0,0.2) 0px 4px 24px 0px;
+}
