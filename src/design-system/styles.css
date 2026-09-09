@@ -5,6 +5,3 @@
 @import "tokens/radius.css";
 @import "tokens/shadows.css";
 @import "tokens/motion.css";
-
-/* Composer — animated gradient frame khi focus (tôn màu thương hiệu, gộp reduced-motion global) */
-.vivu-composer-frame--active{animation:vivu-border-pan 3.2s linear infinite}
