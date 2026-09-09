@@ -1,7 +1,9 @@
 import { registerRoute, sendJson } from './plugin.js'
 import { generateJson } from './coachio.js'
-import { buildSuggestPrompt } from './prompts.js'
+import { buildSuggestPrompt, buildItineraryPrompt } from './prompts.js'
 import { resolveImage } from './images.js'
+import { getWeather } from './weather.js'
+import { getPlace } from './place.js'
 
 registerRoute({
   method: 'POST',
@@ -36,5 +38,65 @@ registerRoute({
     const result = await resolveImage(q, size)
     cache.set(key, result)
     sendJson(res, 200, result)
+  },
+})
+
+registerRoute({
+  method: 'GET',
+  match: (p) => p === '/api/place',
+  handler: async ({ res, query, cache }) => {
+    const q = query.get('q') || ''
+    const key = `place|${q}`
+    const cached = cache.get(key)
+    if (cached) return sendJson(res, 200, cached)
+    const data = await getPlace(q)
+    cache.set(key, data)
+    sendJson(res, 200, data)
+  },
+})
+
+registerRoute({
+  method: 'GET',
+  match: (p) => p === '/api/weather',
+  handler: async ({ res, query, cache }) => {
+    const name = query.get('q') || ''
+    const lat = query.get('lat') != null ? Number(query.get('lat')) : null
+    const lon = query.get('lon') != null ? Number(query.get('lon')) : null
+    const start = query.get('start'); const end = query.get('end')
+    const key = `wx|${lat}|${lon}|${name}|${start}|${end}`
+    const cached = cache.get(key)
+    if (cached) return sendJson(res, 200, cached)
+    const data = await getWeather({ name, lat, lon, start, end })
+    cache.set(key, data)
+    sendJson(res, 200, data)
+  },
+})
+
+registerRoute({
+  method: 'POST',
+  match: (p) => p === '/api/itinerary',
+  handler: async ({ req, res, readJsonBody }) => {
+    const body = await readJsonBody(req)
+    const messages = buildItineraryPrompt(body)
+    const data = await generateJson(messages)
+    const list = Array.isArray(data) ? data : data?.days || []
+    const order = ['Sáng', 'Trưa', 'Chiều', 'Tối']
+    const days = list.map((d, i) => ({
+      dayIndex: d.dayIndex || i + 1,
+      date: d.date || '',
+      slots: order.map((period) => {
+        const s = (d.slots || []).find((x) => x.period === period) || {}
+        return {
+          period,
+          placeName: s.placeName || '',
+          description: s.description || '',
+          duration: s.duration || '',
+          icon: s.icon || 'map-pin',
+          wikiTitle: s.wikiTitle || s.placeName || '',
+          imageQuery: s.imageQuery || s.placeName || '',
+        }
+      }),
+    }))
+    sendJson(res, 200, days)
   },
 })
