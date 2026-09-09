@@ -1,3 +1,5 @@
+import { wikiFetch } from './wiki.js'
+
 async function summaryThumb(host, title, size, fetchImpl) {
   // Ưu tiên pageimages với pithumbsize: MediaWiki tự sinh URL ở kích thước
   // pre-generated hợp lệ (fetch được). KHÔNG tự đổi số px trong URL — Wikimedia
@@ -50,7 +52,7 @@ async function tryHost(host, query, size, fetchImpl) {
   return null
 }
 
-export async function resolveImage(query, size = 400, { fetchImpl = fetch } = {}) {
+export async function resolveImage(query, size = 400, { fetchImpl = wikiFetch } = {}) {
   const q = String(query || '').trim()
   if (!q) return { url: null, source: null }
   const vi = await tryHost('vi.wikipedia.org', q, size, fetchImpl)

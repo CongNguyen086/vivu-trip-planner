@@ -1,3 +1,5 @@
+import { wikiFetch } from './wiki.js'
+
 export function wmoToIcon(code) {
   if (code === 0) return 'sun'
   if (code === 1 || code === 2) return 'cloud-sun'
@@ -52,7 +54,7 @@ function toDays(json, mode) {
   }))
 }
 
-export async function getWeather({ name, lat, lon, start, end }, { fetchImpl = fetch } = {}) {
+export async function getWeather({ name, lat, lon, start, end }, { fetchImpl = wikiFetch } = {}) {
   if (lat == null || lon == null) {
     const g = name ? await geocode(name, fetchImpl) : null
     if (!g) throw Object.assign(new Error('geocode'), { code: 'UPSTREAM', httpStatus: 502, userMessage: 'Không xác định được vị trí để lấy thời tiết.' })
