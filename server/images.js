@@ -1,16 +1,7 @@
-function upsize(url, size) {
-  return url.replace(/\/(\d+)px-/, `/${size}px-`)
-}
-
 async function summaryThumb(host, title, size, fetchImpl) {
-  const rest = `https://${host}/api/rest_v1/page/summary/${encodeURIComponent(title)}`
-  try {
-    const r = await fetchImpl(rest)
-    if (r.ok) {
-      const d = await r.json()
-      if (d?.thumbnail?.source) return upsize(d.thumbnail.source, size)
-    }
-  } catch { /* bỏ qua */ }
+  // Ưu tiên pageimages với pithumbsize: MediaWiki tự sinh URL ở kích thước
+  // pre-generated hợp lệ (fetch được). KHÔNG tự đổi số px trong URL — Wikimedia
+  // chỉ phục vụ đúng kích thước đã sinh, đổi tay sẽ trả 400.
   const api = `https://${host}/w/api.php?action=query&format=json&origin=*&prop=pageimages&piprop=thumbnail&pithumbsize=${size}&titles=${encodeURIComponent(title)}`
   try {
     const r = await fetchImpl(api)
@@ -21,6 +12,15 @@ async function summaryThumb(host, title, size, fetchImpl) {
         const first = Object.values(pages)[0]
         if (first?.thumbnail?.source) return first.thumbnail.source
       }
+    }
+  } catch { /* bỏ qua */ }
+  // Fallback: REST summary trả thumbnail cố định (~320px) — dùng nguyên văn.
+  const rest = `https://${host}/api/rest_v1/page/summary/${encodeURIComponent(title)}`
+  try {
+    const r = await fetchImpl(rest)
+    if (r.ok) {
+      const d = await r.json()
+      if (d?.thumbnail?.source) return d.thumbnail.source
     }
   } catch { /* bỏ qua */ }
   return null

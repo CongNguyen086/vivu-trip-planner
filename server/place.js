@@ -6,7 +6,7 @@ async function summaryOf(host, title, fetchImpl) {
     const d = await r.json()
     return {
       extract: d.extract || '',
-      imageUrl: d?.thumbnail?.source ? d.thumbnail.source.replace(/\/(\d+)px-/, '/800px-') : null,
+      imageUrl: d?.thumbnail?.source || null,
       lat: d?.coordinates?.lat ?? null,
       lon: d?.coordinates?.lon ?? null,
     }
