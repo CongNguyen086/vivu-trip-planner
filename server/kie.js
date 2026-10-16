@@ -8,7 +8,7 @@ export class AppError extends Error {
 }
 
 const MESSAGES = {
-  INVALID_KEY: 'API key chưa hợp lệ. Kiểm tra COACHIO_API_KEY trong .env.',
+  INVALID_KEY: 'API key chưa hợp lệ. Kiểm tra KIE_API_KEY trong .env.',
   NO_CREDIT: 'Tài khoản đã hết credit.',
   RATE_LIMIT: 'Hệ thống đang bận, thử lại sau ít giây.',
   BAD_REQUEST: 'Yêu cầu không hợp lệ. Thử mô tả ngắn gọn hơn.',
@@ -43,20 +43,20 @@ export function parseJson(text) {
   }
 }
 
-const COACHIO_URL = 'https://api.coachio.ai/api/v1/llm/chat/completions'
-const MODEL = 'google/gemini-3.1-flash-lite'
+const KIE_URL = 'https://api.kie.ai/gemini-3.1-pro/v1/chat/completions'
 
-export async function chatCompletion(messages, { maxTokens = 4096, temperature = 0.7, timeoutMs = 45000 } = {}) {
-  const key = process.env.COACHIO_API_KEY
+// Kie trả lỗi nghiệp vụ bằng HTTP 200 + {code, msg}; code 200 = thành công.
+export async function chatCompletion(messages, { timeoutMs = 60000, reasoningEffort = 'low' } = {}) {
+  const key = process.env.KIE_API_KEY
   if (!key) throw mapError(401)
   const ctrl = new AbortController()
   const timer = setTimeout(() => ctrl.abort(), timeoutMs)
   let resp
   try {
-    resp = await fetch(COACHIO_URL, {
+    resp = await fetch(KIE_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-API-Key': key },
-      body: JSON.stringify({ model: MODEL, messages, stream: false, temperature, max_tokens: maxTokens }),
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` },
+      body: JSON.stringify({ messages, stream: false, reasoning_effort: reasoningEffort }),
       signal: ctrl.signal,
     })
   } catch (e) {
@@ -67,6 +67,7 @@ export async function chatCompletion(messages, { maxTokens = 4096, temperature =
   clearTimeout(timer)
   if (!resp.ok) throw mapError(resp.status)
   const data = await resp.json()
+  if (typeof data?.code === 'number' && data.code !== 200) throw mapError(data.code)
   const content = data?.choices?.[0]?.message?.content
   if (typeof content !== 'string') throw mapError('PARSE_FAILED')
   return content

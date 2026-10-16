@@ -1,5 +1,5 @@
 import { registerRoute, sendJson } from './plugin.js'
-import { generateJson } from './coachio.js'
+import { generateJson } from './kie.js'
 import { buildSuggestPrompt, buildItineraryPrompt } from './prompts.js'
 import { resolveImage } from './images.js'
 import { getWeather } from './weather.js'

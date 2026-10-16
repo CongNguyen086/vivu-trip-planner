@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { mapError, AppError, parseJson } from './coachio.js'
+import { mapError, AppError, parseJson } from './kie.js'
 
 describe('mapError', () => {
   const cases = [
