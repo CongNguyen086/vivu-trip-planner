@@ -1,4 +1,4 @@
-export const VIEWS = { EXPLORE: 'explore', ITINERARY: 'itinerary' }
+export const VIEWS = { EXPLORE: 'explore', RESULTS: 'results', ITINERARY: 'itinerary' }
 
 export function isoPlusDays(base, n) {
   const d = new Date(base)
